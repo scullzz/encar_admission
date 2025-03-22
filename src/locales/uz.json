@@ -1,0 +1,75 @@
+{
+  "dashboard": {
+    "title": "Citifuel Boshqaruv Paneli",
+    "chat": "Chat",
+    "contract": "Kontrakt",
+    "users_awaiting_moderation": "Foydalanuvchilar moderatsiyani kutmoqda",
+    "balance": "Balans",
+    "call_centre": "Call Markazi",
+    "chat_history": "Chat Tarixa",
+    "records": "Yozuvlar",
+    "analytics": "Analitika",
+    "analytics_title": "Analitika",
+    "user_control": "Foydalanuvchilar",
+    "user_control_users": "Foydalanuvchilar",
+    "user_control_realm": "Haqiqiyliklar",
+    "user_control_permission": "Ruxsatlar",
+    "user_control_roles": "Rollar"
+  },
+  "users_table": {
+    "title": "Foydalanuvchilar",
+    "id": "ID",
+    "username": "FOYDALANUVCHI NOMI",
+    "firstname": "ISM",
+    "lastname": "FAMILIYA",
+    "phone": "TELEFON",
+    "status": "HOLAT",
+    "action": "AMAL",
+    "email": "Pochta",
+    "assign_role": "Rolni tayinlash"
+  },
+  "accounts_table": {
+    "id": "ID",
+    "account_name": "AKKAUNT NOMI",
+    "issuer_id": "EMITENT ID",
+    "contract_id": "KONTRAKT ID",
+    "check_fee": "KOMISSIYA",
+    "credit_available": "KREDIT MUMKIN",
+    "currency": "VALYUTA",
+    "description": "TA'RIF",
+    "max_money_code": "MAX PUL KODI",
+    "trans_limit": "TRANSAKSIYA CHEGARASI",
+    "status": "HOLAT"
+  },
+  "call_centre": {
+    "uniqueid": "Unikal ID",
+    "calldate": "Qo'ng'iroq sanasi",
+    "clid": "Qo'ng'iroq qiluvchi identifikatori",
+    "src": "Manba",
+    "dst": "Manzil",
+    "dcontext": "Qo'ng'iroq konteksti",
+    "channel": "Kanal",
+    "dstchannel": "Manzil kanali",
+    "lastapp": "Oxirgi ma'lumotlar",
+    "duration": "Davomiylik",
+    "billsec": "Hisoblash soniyalari",
+    "disposition": "Qo'ng'iroq holati",
+    "amaflags": "AMA bayroqlari",
+    "accountcode": "Hisob kodi",
+    "userfield": "Foydalanuvchi maydoni",
+    "recordingfile": "Yozuv fayli"
+  },
+  "chat_history": {
+    "id": "Id",
+    "content": "Mazmun",
+    "fileId": "Fayl ID",
+    "chatId": "Chat ID",
+    "repliedMessageId": "Javob berilgan xabar ID",
+    "tgMsgId": "Telegram Xabar ID",
+    "authorId": "Muallif ID",
+    "operatorId": "Operator ID"
+  },
+  "profile": {
+    "user": "Foydalanuvchi"
+  }
+}

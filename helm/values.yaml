@@ -1,0 +1,67 @@
+replicaCount: 1
+
+image:
+  repository: registry.dnsc.uz:5002/root/hub/tss-main-frontend
+  pullPolicy: IfNotPresent
+  tag: "main-${CI_PIPELINE_ID}"
+nameOverride: "tss-main-frontend"
+fullnameOverride: "tss-main-frontend"
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 3000
+
+ingress:
+  enabled: true
+  hostname: panel.tsst.ai
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  tls: 
+    enabled: true
+    secretName: tss-main-frontend
+
+externalSecrets:
+  enabled: false
+  name: tss-main-frontend
+  key: "secret/default/tss-main-frontend/frontend"
+
+actuator:
+  enabled: false
+  path: "/actuator/health"
+
+env: {}
+
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "200m"
+  limits:
+    memory: "1024Mi"
+    cpu: "2"
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+
+securityContext: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

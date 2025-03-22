@@ -1,0 +1,61 @@
+image: node:21
+
+variables:
+  REGISTRY: registry.dnsc.uz:5002
+  IMAGE_NAME: root/hub/tss-main-frontend
+  AL_KUBE_CONFIG_DATA_PROD: $AL_KUBE_CONFIG_DATA_PROD
+  AL_KUBE_CONFIG_DATA_DEV: $AL_KUBE_CONFIG_DATA_DEV
+  HUSKY: "0"
+  CI: "true"
+  
+stages:
+  - build
+  - docker
+  - deploy
+
+build_project:
+  stage: build
+  image: node:21
+  script:
+    - yarn install
+    - yarn build
+  artifacts:
+    paths:
+      - dist/**
+
+build_and_push_docker_image:
+  stage: docker
+  image: docker:latest
+  services:
+    - name: docker:dind
+      alias: docker
+      command: ['--tls=false']
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://localhost:2375
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - docker login -u "root" -p "toorqwe1234r" registry.dnsc.uz:5002
+    - docker build -t $REGISTRY/$IMAGE_NAME:$CI_COMMIT_REF_NAME-${CI_PIPELINE_ID} .
+    - docker push $REGISTRY/$IMAGE_NAME:$CI_COMMIT_REF_NAME-${CI_PIPELINE_ID}
+  tags:
+    - kubernetes
+
+deploy_to_k8s:
+  stage: deploy
+  image: alpine/helm:3.10.1
+  only:
+    - main
+    - dev
+  variables:
+    KUBE_NAMESPACE: default
+
+  script:
+    - mkdir ~/.kube
+    - echo $AL_KUBE_CONFIG_DATA | base64 -d > ~/.kube/config
+    - export KUBECONFIG=~/.kube/config
+    - apk add --no-cache gettext curl bash
+    - cd helm
+    - envsubst '$CI_PIPELINE_ID' < Chart.yaml > tmpfile && mv tmpfile Chart.yaml
+    - envsubst '$CI_PIPELINE_ID' < values.yaml > tmpfile && mv tmpfile values.yaml
+    - helm upgrade --install tss-main-frontend ./ -n $KUBE_NAMESPACE --wait --timeout 300s --atomic -f values.yaml

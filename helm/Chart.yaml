@@ -1,0 +1,7 @@
+apiVersion: v2
+name: tss-main-frontend
+description: Helm chart for deploying citifuel-main-frontend application
+type: application
+version: 0.1.${CI_PIPELINE_ID}
+
+appVersion: "1.0.0"

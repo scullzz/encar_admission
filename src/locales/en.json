@@ -1,0 +1,93 @@
+{
+  "dashboard": {
+    "title": "Citifuel Dashboard Panel",
+    "chat": "Chat",
+    "contract": "Contract",
+    "users_awaiting_moderation": "Users awaiting moderation",
+    "balance": "Balance",
+    "call_centre": "Call Center",
+    "chat_history": "Chat History",
+    "records": "Records",
+    "analytics": "Analytics",
+    "analytics_title": "Analytics",
+    "user_control": "Users",
+    "user_control_users": "Users",
+    "user_control_realm": "Realms",
+    "user_control_permission": "Permissions",
+    "user_control_roles": "Roles"
+  },
+  "users_table": {
+    "title": "Users",
+    "id": "ID",
+    "username": "USERNAME",
+    "firstname": "FIRSTNAME",
+    "lastname": "LASTNAME",
+    "phone": "PHONE",
+    "status": "STATUS",
+    "action": "ACTION",
+    "activate": "Activate",
+    "block": "Block",
+    "email": "EMAIL",
+    "assign_role": "Assign role",
+    "cancel": "Cancel",
+    "assign": "Assign"
+  },
+  "accounts_table": {
+    "id": "ID",
+    "account_name": "ACCOUNT NAME",
+    "issuer_id": "ISSUER-ID",
+    "contract_id": "CONTRACT-ID",
+    "check_fee": "CHECK FEE",
+    "credit_available": "CREDIT AVAILABLE",
+    "currency": "CURRENCY",
+    "description": "DESCRIPTION",
+    "max_money_code": "MAX MONEY CODE",
+    "trans_limit": "TRANS LIMIT",
+    "status": "STATUS"
+  },
+  "call_centre": {
+    "uniqueid": "Unique ID",
+    "calldate": "Call Date",
+    "clid": "Caller ID",
+    "src": "Source",
+    "dst": "Destination",
+    "dcontext": "Dial Context",
+    "channel": "Channel",
+    "dstchannel": "Destination Channel",
+    "lastapp": "Last Data",
+    "duration": "Duration",
+    "billsec": "Billing Seconds",
+    "disposition": "Disposition",
+    "amaflags": "AMA Flags",
+    "accountcode": "Account Code",
+    "userfield": "User Field",
+    "recordingfile": "Recording File"
+  },
+  "chat_history": {
+    "id": "Id",
+    "content": "Content",
+    "fileId": "File ID",
+    "chatId": "Chat ID",
+    "repliedMessageId": "Replied Message ID",
+    "tgMsgId": "Telegram Message ID",
+    "authorId": "Author ID",
+    "operatorId": "Operator ID"
+  },
+  "chat": {
+    "statistics": "Chat Statistics",
+    "message_statistics": "Message Statistics",
+    "operator_statistics": "Operator Statistics",
+    "average_response_time": "Average Response Time",
+    "total_chats": "Total Chats",
+    "active_chats": "Active Chats",
+    "closed_chats": "Closed Chats",
+    "initiated_chats": "Initiated Chats",
+    "total_messages": "Total Messages",
+    "client_messages": "Client Messages",
+    "operator_messages": "Operator Messages",
+    "no_data": "No available data"
+  },
+  "profile": {
+    "user": "User"
+  }
+}

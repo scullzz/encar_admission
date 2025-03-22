@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  app:
+    image: registry.dnsc.uz:5002/root/hub/tss_main_frontend:latest
+    ports:
+      - "8003:3000"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"       # Лимит на 0.5 CPU на контейнер
+          memory: "512M"    # Лимит 512 MB памяти на контейнер
+        reservations:
+          cpus: "0.25"      # Резервируем 0.25 CPU на контейнер
+          memory: "256M"    # Резервируем 256 MB памяти на контейнер
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    networks:
+      - app-network
+    environment:
+        - VITE_APP_VERSION=v1.3.0
+        - GENERATE_SOURCEMAP=false
+        ## Backend API URL
+        - PUBLIC_URL = https://tss.dnsc.uz/
+        - VITE_APP_BASE_NAME = /
+networks:
+  app-network:
+    driver: overlay
