@@ -28,6 +28,14 @@ const dashboard = {
   type: 'group',
   children: [
     {
+      id: 'cars',
+      title: 'Cars',
+      type: 'item',
+      url: '/cars',
+      icon: icons.RobotOutlined,
+      breadcrumbs: false
+    },
+    {
       id: 'filters',
       title: 'Filters',
       type: 'item',
@@ -65,6 +73,22 @@ const dashboard = {
       type: 'item',
       url: '/pay_history',
       icon: icons.DollarOutlined,
+      breadcrumbs: false
+    },
+    {
+      id: 'settings',
+      title: 'Settings',
+      type: 'item',
+      url: '/settings',
+      icon: icons.RobotOutlined,
+      breadcrumbs: false
+    },
+    {
+      id: 'users',
+      title: 'Users',
+      type: 'item',
+      url: '/users',
+      icon: icons.UserOutlined,
       breadcrumbs: false
     }
   ]
