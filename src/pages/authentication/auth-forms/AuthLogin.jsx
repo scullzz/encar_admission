@@ -58,7 +58,7 @@ export default function AuthLogin() {
 
     if (response.status === 200) {
       localStorage.setItem('userName', 'admin');
-      navigate('/home');
+      navigate('/cars');
     } else {
       setServerError('Неверные учетные данные. Попробуйте снова.');
     }
