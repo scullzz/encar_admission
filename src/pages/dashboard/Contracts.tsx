@@ -19,21 +19,32 @@ import {
 } from '@mui/material';
 
 interface Contact {
+  id: number;
   title: string;
   url: string;
   sequence_number: number;
+  create_dttm?: string;
+  update_dttm?: string;
+}
+
+interface FetchContactsResponse {
+  items: Contact[];
+  total: number;
+  page: number;
+  size: number;
+  pages: number;
 }
 
 const Contacts: React.FC = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // States for Create/Edit dialog
+  // Dialog states
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [currentContact, setCurrentContact] = useState<Contact | null>(null);
 
-  // States for delete confirmation dialog
+  // Delete confirmation states
   const [deleteContactId, setDeleteContactId] = useState<number | null>(null);
   const [openDeleteConfirm, setOpenDeleteConfirm] = useState<boolean>(false);
 
@@ -43,18 +54,21 @@ const Contacts: React.FC = () => {
   const fetchContacts = async () => {
     setLoading(true);
     try {
-      const response = await fetch('https://api.a-b-d.ru/contact/', {
+      const response = await fetch('https://api.a-b-d.ru/admin/contacts/?page=1&size=50', {
         method: 'GET',
         headers: {
           accept: 'application/json',
-          auth: '123'
+          auth: 'abcd-1234',
+          login: 'admin'
         }
       });
       if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`);
       }
-      const data: Contact[] = await response.json();
-      setContacts(data);
+
+      // The response shape: { items, total, page, size, pages }
+      const data: FetchContactsResponse = await response.json();
+      setContacts(data.items || []);
     } catch (error) {
       console.error('Error fetching contacts:', error);
     } finally {
@@ -63,15 +77,16 @@ const Contacts: React.FC = () => {
   };
 
   // --------------------------------------------------------------------------
-  // Get one contact by sequence_number (for editing)
+  // Get one contact by its ID
   // --------------------------------------------------------------------------
   const getContactById = async (id: number) => {
     try {
-      const response = await fetch(`https://api.a-b-d.ru/contact/${id}`, {
+      const response = await fetch(`https://api.a-b-d.ru/admin/contacts/${id}`, {
         method: 'GET',
         headers: {
           accept: 'application/json',
-          auth: '123'
+          auth: 'abcd-1234',
+          login: 'admin'
         }
       });
       if (!response.ok) {
@@ -86,67 +101,70 @@ const Contacts: React.FC = () => {
   };
 
   // --------------------------------------------------------------------------
-  // Create a new contact
+  // Create a new contact (with sequence_number)
   // --------------------------------------------------------------------------
-  const createContact = async (contactData: Omit<Contact, 'sequence_number'>) => {
+  const createContact = async (contactData: Omit<Contact, 'id'>) => {
     try {
-      const response = await fetch('https://api.a-b-d.ru/contact/', {
+      const response = await fetch('https://api.a-b-d.ru/admin/contacts/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           accept: 'application/json',
-          auth: '123'
+          auth: 'abcd-1234',
+          login: 'admin'
         },
         body: JSON.stringify(contactData)
       });
       if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`);
       }
-      fetchContacts();
+      await fetchContacts();
     } catch (error) {
       console.error('Error creating contact:', error);
     }
   };
 
   // --------------------------------------------------------------------------
-  // Update an existing contact
+  // Update an existing contact by ID (with sequence_number)
   // --------------------------------------------------------------------------
-  const updateContact = async (id: number, contactData: Omit<Contact, 'sequence_number'>) => {
+  const updateContact = async (id: number, contactData: Omit<Contact, 'id'>) => {
     try {
-      const response = await fetch(`https://api.a-b-d.ru/contact/${id}`, {
+      const response = await fetch(`https://api.a-b-d.ru/admin/contacts/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           accept: 'application/json',
-          auth: '123'
+          auth: 'abcd-1234',
+          login: 'admin'
         },
         body: JSON.stringify(contactData)
       });
       if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`);
       }
-      fetchContacts();
+      await fetchContacts();
     } catch (error) {
       console.error('Error updating contact:', error);
     }
   };
 
   // --------------------------------------------------------------------------
-  // Delete a contact
+  // Delete a contact by ID
   // --------------------------------------------------------------------------
   const deleteContact = async (id: number) => {
     try {
-      const response = await fetch(`https://api.a-b-d.ru/contact/${id}`, {
+      const response = await fetch(`https://api.a-b-d.ru/admin/contacts/${id}`, {
         method: 'DELETE',
         headers: {
           accept: 'application/json',
-          auth: '123'
+          auth: 'abcd-1234',
+          login: 'admin'
         }
       });
       if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`);
       }
-      fetchContacts();
+      await fetchContacts();
     } catch (error) {
       console.error('Error deleting contact:', error);
     }
@@ -157,7 +175,8 @@ const Contacts: React.FC = () => {
   // --------------------------------------------------------------------------
   const handleOpenCreate = () => {
     setIsEditMode(false);
-    setCurrentContact({ title: '', url: '', sequence_number: 0 });
+    // Start with empty fields, including sequence_number
+    setCurrentContact({ id: 0, title: '', url: '', sequence_number: 0 });
     setOpenDialog(true);
   };
 
@@ -177,12 +196,16 @@ const Contacts: React.FC = () => {
 
   const handleSaveContact = async () => {
     if (!currentContact) return;
-    const { title, url } = currentContact;
+    const { id, title, url, sequence_number } = currentContact;
+
     if (isEditMode) {
-      await updateContact(currentContact.sequence_number, { title, url });
+      // For update, we pass the ID to update, omitting `id` from the payload
+      await updateContact(id, { title, url, sequence_number });
     } else {
-      await createContact({ title, url });
+      // For create, we pass everything except the ID
+      await createContact({ title, url, sequence_number });
     }
+
     setOpenDialog(false);
     setCurrentContact(null);
   };
@@ -248,7 +271,7 @@ const Contacts: React.FC = () => {
               </TableRow>
             ) : (
               contacts.map((contact) => (
-                <TableRow key={contact.sequence_number}>
+                <TableRow key={contact.id}>
                   <TableCell>{contact.title}</TableCell>
                   <TableCell>
                     <a href={contact.url} target="_blank" rel="noopener noreferrer">
@@ -257,10 +280,10 @@ const Contacts: React.FC = () => {
                   </TableCell>
                   <TableCell>{contact.sequence_number}</TableCell>
                   <TableCell sx={{ display: 'flex' }}>
-                    <Button variant="outlined" color="primary" sx={{ mr: 1 }} onClick={() => handleOpenEdit(contact.sequence_number)}>
+                    <Button variant="outlined" color="primary" sx={{ mr: 1 }} onClick={() => handleOpenEdit(contact.id)}>
                       Редактировать
                     </Button>
-                    <Button variant="outlined" color="error" onClick={() => handleOpenDeleteConfirm(contact.sequence_number)}>
+                    <Button variant="outlined" color="error" onClick={() => handleOpenDeleteConfirm(contact.id)}>
                       Удалить
                     </Button>
                   </TableCell>
@@ -286,6 +309,12 @@ const Contacts: React.FC = () => {
                 label="URL"
                 value={currentContact.url}
                 onChange={(e) => setCurrentContact((prev) => (prev ? { ...prev, url: e.target.value } : null))}
+              />
+              <TextField
+                type="number"
+                label="Sequence Number"
+                value={currentContact.sequence_number}
+                onChange={(e) => setCurrentContact((prev) => (prev ? { ...prev, sequence_number: +e.target.value } : null))}
               />
             </Box>
           )}
